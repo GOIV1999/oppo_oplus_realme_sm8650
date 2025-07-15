@@ -261,16 +261,6 @@ jobs:
             echo "CONFIG_MQ_IOSCHED_SSG=y" >> ./common/arch/arm64/configs/gki_defconfig
             echo "CONFIG_MQ_IOSCHED_SSG_CGROUP=y" >> ./common/arch/arm64/configs/gki_defconfig
           fi
-
-      # 风驰内核，以 sm8750 为主体，其他 CPU 可能无效或者无法跑出
-      - name: Add sched_ext
-        if: ${{ github.event.inputs.scx_enable == 'true' }}
-        run: |
-          cd kernel_workspace/kernel_platform
-          git clone https://github.com/HanKuCha/sched_ext.git
-          cp -r ./sched_ext/* ./common/kernel/sched
-          rm -rf ./sched_ext/.git
-          cd common/kernel/sched
           
       - name: 添加制作名称
         run: |
@@ -287,7 +277,8 @@ jobs:
               sed -i "\$s|echo \"\\\$res\"|echo \"-${{ env.KERNEL_NAME }}\"|" "$f"
             done
           fi
-           
+
+      # 风驰内核，以 sm8750 为主体，其他 CPU 可能无效或者无法跑出
       - name: 构建内核
         run: |
           cd kernel_workspace
